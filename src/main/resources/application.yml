@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${dburl} #jdbc:postgresql://localhost/sensordata?user=sensors-app&password=password
+    url: ${dburl}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false

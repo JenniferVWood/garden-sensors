@@ -1,0 +1,9 @@
+{
+  "type": "TEMP",
+  "value": 100,
+  "unit": "deg",
+  "sensor": {
+    "id": "42f1d91f-b118-4b63-ab57-36ad39ffda2c",
+    "name": "basement"
+  }
+}

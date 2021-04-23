@@ -1,6 +1,9 @@
 package org.buskersguide.sensors.workflow
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.buskersguide.sensors.model.Sensor
 import org.buskersguide.sensors.model.SensorReading
 import org.buskersguide.sensors.repository.SensorReadingRepository
 import org.buskersguide.sensors.repository.SensorRepository
@@ -16,14 +19,22 @@ class ProcessSensorReadingWorkflow(
     private final val mapper: ObjectMapper) {
 
     fun processReading(message: Message<String>) {
-        // map to a model
-        val sensorReading: SensorReading = mapper.readValue(message.payload, SensorReading::class.java)
-        // validate
+        GlobalScope.launch {
+            val sensorReading: SensorReading = mapper.readValue(message.payload, SensorReading::class.java)
+            println(message.payload)
+            // validate
+            //  nothing to validate. if it's in-valid, discard reading
+            // future: dlq, -Will, qos options
 
-        // persist
-        sensorRepo.save(sensorReading.sensor)
-        sensorReadingRepo.save(sensorReading)
+            // persist
+            val sensor: Sensor? = sensorReading.sensor
+            if (sensor != null) {
+                sensorRepo.save(sensor)
+                sensorReadingRepo.save(sensorReading)
+            }
 
-        println(message.payload)
+        }
+
     }
+
 }

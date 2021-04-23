@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class OtherConfig {
- @Bean
- fun getObjectMapper(): ObjectMapper {
-  return ObjectMapper()
- }
+    @Bean
+    fun getObjectMapper(): ObjectMapper {
+        return ObjectMapper()
+    }
 }

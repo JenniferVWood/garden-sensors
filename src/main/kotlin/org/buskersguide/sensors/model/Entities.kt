@@ -2,7 +2,10 @@ package org.buskersguide.sensors.model
 
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 
 @Entity
 @Table(name = "sensor_reading")

@@ -27,6 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.6")
 
     //https://docs.spring.io/spring-integration/reference/html/mqtt.html#configuring-with-java-configuration
     implementation( "org.springframework.integration:spring-integration-mqtt:5.4.6")

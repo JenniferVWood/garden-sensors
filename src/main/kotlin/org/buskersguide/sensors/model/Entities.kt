@@ -12,7 +12,7 @@ import javax.persistence.Table
 data class SensorReading(
     @Id var id: UUID? = UUID.randomUUID(),
     @ManyToOne
-    var sensor: Sensor? = null,
+    var sensor: Sensor = Sensor(),
     var type: String? = null,
     var value: Double? = null,
     var unit: String? = null,

@@ -1,5 +1,6 @@
 package org.buskersguide.sensors.model
 
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.Entity

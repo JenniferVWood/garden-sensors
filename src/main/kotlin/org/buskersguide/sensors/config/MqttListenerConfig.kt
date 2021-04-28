@@ -19,9 +19,14 @@ class MqttListenerConfig(@Autowired private val processSensorReading: ProcessSen
     @Bean
     fun mqttInbound(): IntegrationFlow {
         return IntegrationFlows.from(
-            MqttPahoMessageDrivenChannelAdapter("tcp://localhost:1883", "testClient", "topic1", "topic2")
+            //TODO: move to config
+            MqttPahoMessageDrivenChannelAdapter("tcp://localhost:1883", "testClient", "sensors")
         )
             .handle { m: Message<String> ->
+                // I figured out the prob w/ async, I think
+                // .get() needs something to operate on in order to update itself about
+                // mqtt status, but the async code doesn't respond with anything.
+                // todo: implement that
                 processSensorReading.processReading(m)
             }
             .get()

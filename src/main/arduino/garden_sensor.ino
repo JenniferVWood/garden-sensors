@@ -11,8 +11,8 @@ char host[] = "192.168.0.8";
 char clientid[] = " ";
 char topicname[] = "sensors";
 
-char sensorId[] = "42f1d91f-b118-4b63-ab57-36ad39ffda2c";
-char sensorName[] = "home - patio hoop";
+char sensorId[] = "e331c2b4-a932-11eb-9184-ffb10fae0872";
+char sensorName[] = "farm - hoop";
 char type[] = "temp";
 char unit[] = "deg F";
 
@@ -21,12 +21,19 @@ WiFiClient wificlient;
 MQTTClient mqttclient(&tasks, &wificlient, host, 1883, clientid, NULL, NULL);
 MQTTTopic topic(&mqttclient, topicname);
 
-int ThermistorPin = A0;
+int ThermistorPin = A1;
 int Vo;
-float R1 = 9930;
+float R1 = 9950;
 float logR2, R2, T;
-float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
 
+//https://forum.arduino.cc/t/coefficients-correct-according-to-docs-but-thermistor-temp-10-degrees-off/590149/7
+//float c1 = -0.0009500542517871515, c2 = 0.000589776210603468, c3 = -0.0000014276195692161472;
+
+
+
+//http://cdn.sparkfun.com/datasheets/Sensors/Temp/ntcle100.pdf model 103*B0
+// calculator: https://rusefi.com/Steinhart-Hart.html
+float c1 = 0.0020959970520719553, c2 = 0.00005193374541559819, c3 = 8.742988520719741e-7;
 void setup() {
   Serial.begin(9600);
   WiFi.begin(ssid, pass);
@@ -34,12 +41,13 @@ void setup() {
 }
 
 void loop() {
-  
+
   T = readTemp(100);
-  Serial.print("Temperature: "); 
+  Serial.print("Temperature: ");
   Serial.print(T);
-  Serial.println(" F"); 
+  Serial.println(" F");
   sendData(T);
+//  delay(1000);
   delay(1000 * 60 * 15); // 15 minutes
 }
 
@@ -60,12 +68,12 @@ void sendData(float T) {
     json.concat(", \"unit\":\"");
     json.concat(unit);
     json.concat("\"}");
-    
+
     int strLen = json.length() +1;
     char buff[strLen];
     json.toCharArray(buff, strLen);
     topic.publish(buff);
- 
+
     while (tasks.available()) {
       tasks.run();
     }
@@ -89,12 +97,12 @@ float readTemp() {
   Vo = analogRead(ThermistorPin);
 //  Serial.print("Vo: ");
 //  Serial.println(Vo);
-  
+
   R2 = R1 * (1023.0 / (float)Vo - 1.0);
   logR2 = log(R2);
   T = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2));
   T = T - 273.15;
-  T = (T * 9.0)/ 5.0 + 32.0;   
+  T = (T * 9.0)/ 5.0 + 32.0;
 }
 
 float readTemp(int numReadings) {

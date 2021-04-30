@@ -23,17 +23,17 @@ MQTTTopic topic(&mqttclient, topicname);
 
 int ThermistorPin = A1;
 int Vo;
-float R1 = 9950;
+float R1 = 9960;
 float logR2, R2, T;
 
 //https://forum.arduino.cc/t/coefficients-correct-according-to-docs-but-thermistor-temp-10-degrees-off/590149/7
-//float c1 = -0.0009500542517871515, c2 = 0.000589776210603468, c3 = -0.0000014276195692161472;
-
+float c1 = 0.0020959970520719553, c2 = 0.00005193374541559819, c3 = 8.742988520719741e-7;
 
 
 //http://cdn.sparkfun.com/datasheets/Sensors/Temp/ntcle100.pdf model 103*B0
 // calculator: https://rusefi.com/Steinhart-Hart.html
-float c1 = 0.0020959970520719553, c2 = 0.00005193374541559819, c3 = 8.742988520719741e-7;
+
+
 void setup() {
   Serial.begin(9600);
   WiFi.begin(ssid, pass);
@@ -42,7 +42,7 @@ void setup() {
 
 void loop() {
 
-  T = readTemp(100);
+  T = readTemp();
   Serial.print("Temperature: ");
   Serial.print(T);
   Serial.println(" F");
@@ -91,10 +91,19 @@ void sendData(float T) {
 
 }
 
+float readSensor(int numSamples) {
+  float sum = 0.0;
+  for (int i = 0; i < numSamples; i++) {
+    sum += analogRead(ThermistorPin);
+    delay(10);
+  }
+  return sum / numSamples;
+}
 
 
 float readTemp() {
-  Vo = analogRead(ThermistorPin);
+  Vo = readSensor(100);
+
 //  Serial.print("Vo: ");
 //  Serial.println(Vo);
 
@@ -105,10 +114,10 @@ float readTemp() {
   T = (T * 9.0)/ 5.0 + 32.0;
 }
 
-float readTemp(int numReadings) {
-  float sum = 0.0;
-  for (int i = 0; i < numReadings; i++) {
-    sum += readTemp();
-  }
-  return sum / numReadings;
-}
+//float readTemp(int numReadings) {
+//  float sum = 0.0;
+//  for (int i = 0; i < numReadings; i++) {
+//    sum += readTemp();
+//  }
+//  return sum / numReadings;
+//}

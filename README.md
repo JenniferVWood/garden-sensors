@@ -15,3 +15,5 @@ arduino -> mqtt -> springboot/kotlin -> postgresql -> grafana
 
 #### Notes
 I've written something very similar to the kotlin piece, in Go, previously.  One of my goals here is to apply my experience with goroutines, and for that matter WebFlux concurrency abstractions, to koroutines.  I'm always looking for new ways to solve the same problem!
+
+![Garden Sensor 0.1](https://github.com/JenniferVWood/garden-sensors/blob/main/PXL_20210503_133640376.jpg)
